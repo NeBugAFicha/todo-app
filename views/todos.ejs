@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <meta charset='UTF-8'>
+        <title>Todo app</title>
+        <link rel='stylesheet' href='/styles.css'>
+    </head>
+    <body>
+        <h1>Hell9, thats my first page for the application</h1>
+        <ul>
+            <% if (user) { %>
+              <li>Welcome, <%= user.email %></li>
+              <li><a href="/logout">Log out</a></li>
+            <% } else { %>
+              <li><a href="/login">Log in</a></li>
+              <li><a href="/signup" class="btn">Sign up</a></li>
+            <% } %>
+        </ul> 
+        <form action='/createTodo' method='POST'>
+            <label for='name'>Name: </label>
+            <input type='text' name='name' id='name' required/><br>
+            <label for='aim'>Aim: </label>
+            <input type='text' name='aim' id='aim' required/><br>
+            <label id='daysToDo'>Days to do: </label>
+            <input type='text' name='daysToDo' id='daysTodo' required/><br>
+            <button type='submit'>Send</button> 
+        </form>
+        <% todos.forEach((todo)=>{ %>
+            <h2>Name: <%= todo.name%>, Aim: <%= todo.aim%>, Days to Do: <%= todo.daysToDo%></h2><br>
+            <a class='delete' data-doc='<%= todo.id %>'>Delete</a>
+        <% }) %>
+    </body>
+
+    <script>
+        const trashcan = document.querySelector('a.delete');
+        trashcan.addEventListener('click',(e)=>{
+            const endpoint = `/deleteTodo/${trashcan.dataset.doc}`;
+            fetch(endpoint,{
+                method: 'DELETE',
+            })
+            .then(response => response.json())
+            .then(data => window.location.href = data.redirect)
+            .catch(err => console.log(err));
+        })
+    </script>
+</html>
